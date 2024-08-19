@@ -1,5 +1,9 @@
-import PlayGame
+from GameStates import MainMenu
+
+def main():
+	current_state = MainMenu()
+	while True:
+		current_state = current_state()
 
 if __name__ == "__main__":
-	#Will be changed to call Game() which starts from MainMenu()
-	PlayGame()
+	main()
