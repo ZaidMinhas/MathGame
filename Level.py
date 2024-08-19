@@ -6,6 +6,7 @@ from typing import Callable, ClassVar, List, Tuple
 class Level:
 	Levels: ClassVar[List['Level']] = []
 	
+	#Name of level, range of first number, range of second number, symbol of operator, callable operator
 	name: str
 	a: Tuple[int, int]
 	b: Tuple[int, int]
@@ -30,6 +31,7 @@ class Level:
 		return a,b
 		
 
+#inherited classes that change functionality of certain levels (might improve or even change to a decorator) 
 class SubLevel(Level):
 	def _generate(self):
 		a,b = super()._generate()
@@ -42,6 +44,7 @@ class DivLevel(Level):
 		return c,b
 
 
+#Creation of Levels (More to be added and improved)
 Level("Addition I", (0,50), (0,50), '+', int.__add__)
 Level("Addition II", (0,100), (0,100), '+', int.__add__)
 
