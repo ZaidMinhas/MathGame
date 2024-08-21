@@ -43,7 +43,6 @@ class DivLevel(Level):
 		c = a*b
 		return c,b
 
-
 #Creation of Levels (More to be added and improved)
 Level("Addition I", (0,50), (0,50), '+', int.__add__)
 Level("Addition II", (0,100), (0,100), '+', int.__add__)
@@ -53,8 +52,8 @@ SubLevel("Subtraction II", (0,100), (0,100), '-', int.__sub__)
 
 Level("Add Sub III", (-100,100), (-100,100), '+', int.__add__)
 
-Level("Multiplication I", (0,10), (0,10), '+', int.__mul__)
-Level("Multiplication II", (0,100), (0,10), '+', int.__mul__)
+Level("Multiplication I", (0,10), (0,10), 'x', int.__mul__)
+Level("Multiplication II", (0,100), (0,10), 'x', int.__mul__)
 
 DivLevel("Division I", (1,10), (1,10), '/', int.__floordiv__)
 DivLevel("Division II", (1,100), (1,10), '/', int.__floordiv__)

@@ -1,5 +1,6 @@
 from State import State
 from Level import Level
+from ProgressBar import ProgressBar
 
 class MainMenu(State):
     def __init__(self):
@@ -8,64 +9,71 @@ class MainMenu(State):
         
     def display(self):
         super().display()
+        print("Welcome to the Math Game, by Zaid")
         print("1. Play Game")
         print("2. See Stats")
         print("Q. Exit game")
 
 class Stats(State):
-	pass
+    pass
 
 class Exit(State):
-	def display(self):
-		super().display()
-		print("Thank you for playing!")
+    def display(self):
+        super().display()
+        print("Thank you for playing!")
 
-	def __call__(self):
-		self.display()
-		return quit()
-	
+    def __call__(self):
+        self.display()
+        return quit()
+    
 class PlayGame(State):	
-	def __init__(self):
-		self.transition = {"Q" : MainMenu, "q" : MainMenu}	
+    def __init__(self):
+        self.transition = {"Q" : MainMenu, "q" : MainMenu}	
 
-	def display(self):
-		super().display()
-		for n,lvl in enumerate(Level.Levels):
-			if (n+1) %5 == 0:
-				print()
-			print(f"{n+1}. {lvl.name}")
-		print("\nQ. Back")
+    def display(self):
+        super().display()
+        for n,lvl in enumerate(Level.Levels):
+            if (n+1) %5 == 0:
+                print()
+            print(f"{n+1}. {lvl.name}")
+        print("\nQ. Back")
 
-	def getInput(self):
-		while True:
-			inp = input(":")
-			if inp in self.transition.keys():
-				return self.transition[inp]
-			else:
-				try:
-					lvl = Level.Levels[int(inp)-1]
-					self.play(lvl)
-					self.display()
-				except (ValueError, IndexError):
-					pass
+    def getInput(self):
+        while True:
+            inp = input(":")
+            if inp in self.transition.keys():
+                return self.transition[inp]
+            else:
+                try:
+                    lvl = Level.Levels[int(inp)-1]
+                    self.play(lvl)
+                    self.display()
+                except (ValueError, IndexError):
+                    pass
 
-	def play(self, lvl : Level):
-		self.right, self.wrong = 0,0
-		self.check = []
-		correct, questions  = 0,10
-		print('\033c', end = '', flush = True)
-		for i in range(1,questions+1):
-			
-			print(f"Q{i}")
-			expr, sol = lvl.generate()
-			_sol = input("  " + expr)
-			if _sol == (sol := str(sol)):
-				correct += 1
-				print("CORRECT")
-			else:
-				print("INCORRECT, correct answer: " + sol )
-		
-		print(f"\nYOU GOT {correct}/{questions} CORRECT!")
-		
+    def play(self, lvl : Level):
+        self.right, self.wrong = 0,0
+        self.check = []
+        correct, questions  = 0,10
+        pb = ProgressBar(10)
+        print('\033c', end = '', flush = True)
+        for i in range(1,questions+1):
+            print(f"Q{i}/{questions}")
+
+            expr, sol = lvl.generate()
+            _sol = input("  " + expr)
+            output = _sol == (sol := str(sol))
+            if output:
+                correct += 1
+                print("CORRECT")
+            else:
+                print("INCORRECT, correct answer: " + sol )
+            print(pb(output))
+            input("")
+            print('\033c', end = '', flush = True)
+        
+        print(f"\nYOU GOT {correct}/{questions} CORRECT!")
+        input("")
+        
 
 
