@@ -11,7 +11,7 @@ class State:
 		#gets a valid input for FSM
 		while True:
 			inp = input(":")
-			if inp in self.transition.keys():
+			if inp in self.transition:
 				return self.transition[inp]
 
 	def __call__(self):

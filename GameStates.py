@@ -1,11 +1,12 @@
 from State import State
 from Level import Level
 from ProgressBar import ProgressBar
+import Stats
 
 class MainMenu(State):
     def __init__(self):
         super().__init__()
-        self.transition = {"1": PlayGame(), "2": Stats(), "Q": Exit(), "q": Exit()}
+        self.transition = {"1": PlayGame, "2": StatsMenu, "Q": Exit, "q": Exit}
         
     def display(self):
         super().display()
@@ -14,26 +15,30 @@ class MainMenu(State):
         print("2. See Stats")
         print("Q. Exit game")
 
-class Stats(State):
-    pass
+class StatsMenu(State):
+    def __init__(self):
+        super().__init__()
+        self.transition = {"Q": MainMenu, "q": MainMenu}
 
-class Exit(State):
     def display(self):
         super().display()
-        print("Thank you for playing!")
+        stats_dict = Stats.readStats()
+        for sym in stats_dict:
+            print(stats_dict[sym][2])
+            print("  " + Stats.getProgressBar(sym))
+        print("\nQ. Back")
+        
 
-    def __call__(self):
-        self.display()
-        return quit()
-    
+
 class PlayGame(State):	
     def __init__(self):
+        super().__init__()
         self.transition = {"Q" : MainMenu, "q" : MainMenu}	
 
     def display(self):
         super().display()
         for n,lvl in enumerate(Level.Levels):
-            if (n+1) %5 == 0:
+            if (n+1) %4 == 0:
                 print()
             print(f"{n+1}. {lvl.name}")
         print("\nQ. Back")
@@ -41,7 +46,7 @@ class PlayGame(State):
     def getInput(self):
         while True:
             inp = input(":")
-            if inp in self.transition.keys():
+            if inp in self.transition:
                 return self.transition[inp]
             else:
                 try:
@@ -68,12 +73,25 @@ class PlayGame(State):
                 print("CORRECT")
             else:
                 print("INCORRECT, correct answer: " + sol )
-            print(pb(output))
-            input("")
+            print(pb(i/questions))
+            inp = input(":")
+            if inp in self.transition:
+                return self.transition[inp]
+
             print('\033c', end = '', flush = True)
         
         print(f"\nYOU GOT {correct}/{questions} CORRECT!")
+        Stats.updateScore(lvl.sym, correct*lvl.points)
+        print(Stats.getProgressBar(lvl.sym))
         input("")
         
 
+class Exit(State):
+    def display(self):
+        super().display()
+        print("Thank you for playing!")
 
+    def __call__(self):
+        self.display()
+        return quit()
+    
