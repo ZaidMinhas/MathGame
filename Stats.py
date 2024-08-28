@@ -42,7 +42,9 @@ def getSymStats(sym):
 	
 def getProgressBar(sym):
 	score, level, _ = getSymStats(sym)
+	
 	pb = ProgressBar(50, fill = '⬜', unfill= '⬛')
+	# pb = ProgressBar(50, fill = '⬛', unfill= '⬜')
 	score_needed = LevelScore(level)
 	return f"{level} {pb(score/score_needed)} {level+1}"
 
